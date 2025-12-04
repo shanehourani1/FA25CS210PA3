@@ -85,7 +85,6 @@ void printMaze(const vector<vector<int>>& maze,
 
 // ----------------------------------------------------------
 // DO NOT MODIFY: Print the reconstructed path
-// Students must fill parent[][] correctly during DFS
 // ----------------------------------------------------------
 void printPath(pair<int,int> exitcell,
                const vector<vector<int>>& parent_r,
@@ -97,7 +96,6 @@ void printPath(pair<int,int> exitcell,
 
     vector<pair<int,int>> path;
 
-    // Walk backward from exit to entrance
     while (!(r == ent_r && c == ent_c)) {
         path.push_back({r, c});
         int pr = parent_r[r][c];
@@ -115,18 +113,34 @@ void printPath(pair<int,int> exitcell,
 
 // ----------------------------------------------------------
 // STUDENTS IMPLEMENT DFS HERE
-// Add arguments, return type, and logic
+// Step 2: Add basic movement checks
 // ----------------------------------------------------------
 bool dfs(int r, int c,
          const vector<vector<int>>& maze,
          vector<vector<bool>>& visited,
          vector<vector<int>>& parent_r,
          vector<vector<int>>& parent_c,
-         int exit_r, int exit_c);
+         int exit_r, int exit_c)
+{
+    // out of maze
+    if (r < 0 || r >= maze.size() || c < 0 || c >= maze[0].size()) {
+        return false;
+    }
 
+    // wall or we already did this
+    if (maze[r][c] == 1 || visited[r][c]) {
+        return false;
+    }
+
+    // todo: mark visited
+    // todo: check for exit
+    // todo: try neighbors and recursion
+
+    return false; // temp
+}
 
 // ----------------------------------------------------------
-// MAIN PROGRAM (students add DFS calls and logic)
+// MAIN PROGRAM
 // ----------------------------------------------------------
 int main() {
     int N, M;
@@ -137,7 +151,6 @@ int main() {
     vector<vector<int>> maze(N, vector<int>(M));
     generateMaze(maze, N, M);
 
-    // Pick entrance and exit
     pair<int,int> entrance = chooseBoundaryCell(maze);
     pair<int,int> exitcell = chooseBoundaryCell(maze);
 
@@ -150,29 +163,13 @@ int main() {
     int exit_r = exitcell.first;
     int exit_c = exitcell.second;
 
-    // Display the maze
     printMaze(maze, ent_r, ent_c, exit_r, exit_c);
 
-    // Students must use these
     vector<vector<bool>> visited(N, vector<bool>(M, false));
     vector<vector<int>> parent_r(N, vector<int>(M, -1));
     vector<vector<int>> parent_c(N, vector<int>(M, -1));
 
-    // ------------------------------------------------------
-    // STUDENT WORK:
-    // Call your DFS, track visited, and fill parent_r and parent_c
-    // ------------------------------------------------------
-    // bool found = dfs(ent_r, ent_c, maze, visited, parent_r, parent_c, exit_r, exit_c);
-
-    // ------------------------------------------------------
-    // STUDENT WORK:
-    // If found, print the path
-    // ------------------------------------------------------
-    // if (found) {
-    //     printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
-    // } else {
-    //     cout << "\nNo path exists.\n";
-    // }
+    // dfs call will go here later
 
     return 0;
 }
