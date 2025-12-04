@@ -113,7 +113,6 @@ void printPath(pair<int,int> exitcell,
 
 // ----------------------------------------------------------
 // STUDENTS IMPLEMENT DFS HERE
-// Step 2: Add basic movement checks
 // ----------------------------------------------------------
 bool dfs(int r, int c,
          const vector<vector<int>>& maze,
@@ -132,11 +131,41 @@ bool dfs(int r, int c,
         return false;
     }
 
-    // todo: mark visited
-    // todo: check for exit
-    // todo: try neighbors and recursion
+    // mark as seen
+    visited[r][c] = true;
 
-    return false; // temp
+    // at the exit?
+    if (r == exit_r && c == exit_c) {
+        return true;
+    }
+
+    // try all 4 directions
+    for (int k = 0; k < 4; k++) {
+        int nr = r + dr[k];
+        int nc = c + dc[k];
+
+        // still inside maze
+        if (nr < 0 || nr >= maze.size() || nc < 0 || nc >= maze[0].size()) {
+            continue;
+        }
+
+        // skip walls / already visited
+        if (maze[nr][nc] == 1 || visited[nr][nc]) {
+            continue;
+        }
+
+        // remember how we got there
+        parent_r[nr][nc] = r;
+        parent_c[nr][nc] = c;
+
+        // go deeper
+        if (dfs(nr, nc, maze, visited, parent_r, parent_c, exit_r, exit_c)) {
+            return true;
+        }
+    }
+
+    // no path from this spot
+    return false;
 }
 
 // ----------------------------------------------------------
@@ -169,7 +198,20 @@ int main() {
     vector<vector<int>> parent_r(N, vector<int>(M, -1));
     vector<vector<int>> parent_c(N, vector<int>(M, -1));
 
-    // dfs call will go here later
+    // run dfs from the start
+    bool found = dfs(ent_r, ent_c,
+                     maze,
+                     visited,
+                     parent_r,
+                     parent_c,
+                     exit_r, exit_c);
+
+    // show result
+    if (found) {
+        printPath(exitcell, parent_r, parent_c, ent_r, ent_c);
+    } else {
+        cout << "\nNo path exists.\n";
+    }
 
     return 0;
 }
